@@ -1,0 +1,23 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://database:3306/booklist
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+  database:
+    image: mariadb:10.7
+    environment:
+      - MARIADB_DATABASE=booklist
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=password
+      - MARIADB_ROOT_PASSWORD=password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
