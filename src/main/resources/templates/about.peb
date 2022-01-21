@@ -1,0 +1,8 @@
+{% extends "layout/default" %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+    <h1 class="heading heading--size-1">About</h1>
+    <p>This is a sample application for the module Web Engineering at the FHNW. It shows a list of books, allows to add and edit books and write book ratings.</p>
+{% endblock %}

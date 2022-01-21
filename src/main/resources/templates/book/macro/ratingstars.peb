@@ -1,0 +1,18 @@
+{# @pebvariable name="topics" type="java.util.List<ch.fhnw.webec.booklist.model.Topic>" #}
+{# @pebvariable name="rating" type="java.lang.Double" #}
+
+{% macro ratingstars(rating) %}
+    <span class="rating-stars">
+        {% for rollingRating in [1, 2, 3, 4, 5] %}
+            {% if rollingRating <= rating %}
+                <span class="material-icons material-icons-outlined">star</span>
+            {% else %}
+                {% if rating > rollingRating - 1 %}
+                    <span class="material-icons material-icons-outlined">star_half</span>
+                {% else %}
+                    <span class="material-icons material-icons-outlined">star_border</span>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </span>
+{% endmacro %}

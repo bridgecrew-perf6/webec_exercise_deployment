@@ -1,0 +1,74 @@
+{# @pebvariable name="book" type="ch.fhnw.webec.booklist.model.Book" #}
+{# @pebvariable name="review" type="ch.fhnw.webec.booklist.model.Review" #}
+{# @pebvariable name="request" type="org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper" #}
+
+{% import "book/macro/topiclist" %}
+{% import "book/macro/ratingstars" %}
+{% import "form/input" %}
+{% import "form/select" %}
+{% import "form/csrf" %}
+{% import "form/submit" %}
+
+{% extends "layout/default" %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+    <section class="book-detail">
+        <h1 class="heading heading--size-1">{{ book.title }}</h1>
+        {% if book.reviews.size > 0 %}
+            <div class="book-detail__rating">
+                {{ ratingstars(book.averageRating) }}
+            </div>
+        {% endif %}
+        <div class="book-detail__topic-list">
+            {{ topiclist(book.topics) }}
+        </div>
+        <p class="book-detail__description">{{ book.description }}</p>
+
+        {% if request.isUserInRole('ADMIN') %}
+            <div class="book-detail__buttons">
+                <a class="button" href="{{ href('/books/' + book.id + '/edit') }}">Edit</a>
+                <form action="{{ href('/books/' + book.id + '/delete') }}" method="post" class="book-detail__delete-form">
+                    {{ csrf(_csrf) }}
+                    {{ submit("Delete") }}
+                </form>
+            </div>
+        {% endif %}
+    </section>
+
+    <section class="review-list">
+        <div class="review-list__add">
+            <h2>Leave a review</h2>
+            {% if request.isUserInRole('USER') or request.isUserInRole('ADMIN') %}
+                <form action="{{ href('/books/' + book.id + '/reviews/add') }}" method="post" class="form reviews__add-form">
+                    {{ select("review", "Rating", "rating", [1, 2, 3, 4, 5], [], false, _context) }}
+                    {{ input("review", "Comment", "comment", "textarea", review.comment, _context) }}
+                    {{ csrf(_csrf) }}
+                    {{ submit("Add review") }}
+                </form>
+            {% else %}
+                <p>You must be logged in to leave a review, login <a href="{{ href('/login') }}" class="link">here</a>.</p>
+            {% endif %}
+        </div>
+
+        <div class="review-list__latest">
+            <h2>Latest reviews</h2>
+            {% if book.reviews.size > 0 %}
+                {% for review in book.reviews %}
+                    <div class="review">
+                        <h3 class="review__header">
+                            <span class="review__meta">{{ review.createdDateTime | date("dd.MM.YYYY HH:mm") }} {{ review.userName }}</span>
+                            <span class="review__rating">{{ ratingstars(review.rating) }}</span>
+                        </h3>
+                        {% if review.comment %}
+                            <p class="review__comment">{{ review.comment }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                There are no reviews yet.
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

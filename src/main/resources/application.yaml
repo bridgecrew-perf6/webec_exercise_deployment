@@ -1,0 +1,26 @@
+pebble:
+  suffix: .peb
+  cache: false
+  exposeRequestAttributes: true
+
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/booklist;MODE=MySQL;AUTO_SERVER=true
+  sql:
+    init:
+      mode: always
+  h2:
+    console:
+      enabled: true
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  security:
+    user:
+      name: admin
+      password: admin
+server:
+    error:
+        include-stacktrace: never

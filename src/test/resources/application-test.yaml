@@ -1,0 +1,10 @@
+spring:
+    datasource:
+        url: jdbc:h2:mem:booklist_test;MODE=MySQL
+    sql:
+        init:
+            data-locations:
+                - classpath:data-test.sql
+    jpa:
+        hibernate:
+            ddl-auto: create-drop

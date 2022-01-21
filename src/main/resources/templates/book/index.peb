@@ -1,0 +1,40 @@
+{# @pebvariable name="books" type="java.util.List<ch.fhnw.webec.booklist.model.Book>" #}
+{# @pebvariable name="search" type="java.lang.String" #}
+{# @pebvariable name="request" type="org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper" #}
+
+{% import "book/macro/topiclist" %}
+{% import "book/macro/ratingstars" %}
+
+{% extends "layout/default" %}
+
+{% block content %}
+    <h1 class="heading heading--size-1">Featured books</h1>
+
+    {% if search is not empty %}
+        <p>Results for: "{{ search }}"</p>
+    {% endif %}
+
+    <div class="book-list">
+        {% if request.isUserInRole('ADMIN') %}
+            <a class="book-list__add-button button" href="{{ href('/books/add') }}">Add new book</a>
+        {% endif %}
+
+        <div class="book-list__items">
+            {% for book in books %}
+                <div class="book-list__item">
+                    <h2 class="book-list__heading heading heading--size-3">
+                        <a href="{{ href('/books/' + book.id) }}" class="link">{{ book.title }}</a>
+                    </h2>
+                    {% if book.reviews.size > 0 %}
+                        {{ ratingstars(book.averageRating) }}
+                    {% endif %}
+                    <p class="book-list__description">
+                        {{ book.description | abbreviate(80) }}
+                        <a href="{{ href('/books/' + book.id) }}" class="link">more</a>
+                    </p>
+                    {{ topiclist(book.topics) }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

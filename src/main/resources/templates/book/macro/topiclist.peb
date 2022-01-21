@@ -1,0 +1,9 @@
+{# @pebvariable name="topics" type="java.util.List<ch.fhnw.webec.booklist.model.Topic>" #}
+
+{% macro topiclist(topics) %}
+    <div class="topic-list">
+        {% for topic in topics %}
+            <span class="topic-list__item">{{ topic.name | lower }}</span>
+        {% endfor %}
+    </div>
+{% endmacro %}
